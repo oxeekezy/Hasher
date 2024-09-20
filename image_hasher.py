@@ -2,11 +2,12 @@ import os.path
 import binascii
 from PIL import Image
 import time
+from utils import hash_image_generator
 
 
 class ImageHasher:
 
-    def __init__(self, width: int = 8, height: int = 8) -> None:
+    def __init__(self, width: int = 16, height: int = 16) -> None:
         self._size: tuple = [width, height]
 
     def _load_image(self, path: str):
@@ -56,15 +57,7 @@ class ImageHasher:
         self._hash = hex(self._binary_map)[2:]
 
     def _set_image(self):
-        img = Image.new(size=self._size, mode="RGB")
-
-        pixel = 0
-        for w in range(self._size[0]):
-            for h in range(self._size[1]):
-                img.putpixel((w, h), ((int(self._bicolor_str[pixel]) * 255), 0, 0))
-                pixel += 1
-
-        img.show()
+        hash_image_generator(self._size[0], self._size[1], self._bicolor_str).show()
 
     def run(self, path: str):
         self._load_image(path)
@@ -72,17 +65,13 @@ class ImageHasher:
         self._get_binary_map()
         self._calculate_hash()
 
-        # Временный функционал
+        # <- Временный функционал ->#
         # self._set_image()
         # self._resized.show()
-        print(f"HASH: {self._hash}")
+        return self._hash
 
 
 ImageHasher().run(path=f"C:/Users/oxeek/Downloads/test1.png")
 ImageHasher().run(path=f"C:/Users/oxeek/Downloads/test2.png")
 ImageHasher().run(path=f"C:/Users/oxeek/Downloads/test3.png")
 ImageHasher().run(path=f"C:/Users/oxeek/Downloads/test4.png")
-
-# start = time.time()
-# finish = time.time()
-# print("Time:", finish - start)
